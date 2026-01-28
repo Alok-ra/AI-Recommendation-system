@@ -1,0 +1,5 @@
+{
+  "name": "AI Predictive Maintenance System",
+  "description": "An intelligent industrial dashboard for monitoring machine health, predicting failures using simulated ML, and generating actionable maintenance recommendations with Gemini AI.",
+  "requestFramePermissions": []
+}
