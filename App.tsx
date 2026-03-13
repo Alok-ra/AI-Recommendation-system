@@ -207,84 +207,85 @@ const Dashboard = ({ machines, onGenerateReport }: { machines: Machine[], onGene
   const totalBreakdownRisk = machines.reduce((sum, m) => sum + m.costImpact.breakdownCost, 0);
 
   return (
-    <div className="p-8 space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto pb-32">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="p-6 lg:p-10 space-y-10 animate-in fade-in duration-500 max-w-[1600px] mx-auto pb-32">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h2 className="text-3xl font-black text-white italic tracking-tighter">FLEET OPERATIONS</h2>
-          <p className="text-slate-400 mt-1 flex items-center gap-2">
+          <h2 className="text-4xl font-bold text-white tracking-tight">Fleet Overview</h2>
+          <p className="text-slate-400 mt-2 flex items-center gap-2 text-sm">
             <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            Economic & Predictive Intelligence Active
+            Predictive intelligence monitoring {machines.length} assets
           </p>
         </div>
         <button 
           onClick={onGenerateReport} 
-          className="px-6 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold flex items-center gap-3 transition-all shadow-xl shadow-indigo-600/20 uppercase tracking-widest text-xs"
+          className="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20 text-sm"
         >
-          <FileText className="w-5 h-5" /> Generate Fleet Insight
+          <FileText className="w-4 h-4" /> Generate Fleet Report
         </button>
       </header>
 
-      {/* Economic Impact Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-slate-900/80 backdrop-blur-xl border border-indigo-500/20 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col justify-between">
-           <div className="absolute -right-10 -bottom-10 opacity-5">
-              <TrendingUp className="w-64 h-64 text-emerald-400" />
-           </div>
-           <div>
-             <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] block mb-2">Fleet Economic Impact</span>
-             <h3 className="text-3xl font-black text-white italic tracking-tighter mb-4">₹{(totalPotentialSavings / 100000).toFixed(2)} Lakh Potential Savings</h3>
-             <p className="text-slate-400 text-sm leading-relaxed max-w-md">Estimated capital recovery by performing proactive maintenance before critical failure thresholds are met.</p>
-           </div>
-           <div className="mt-8 flex gap-6">
-             <div>
-               <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Preventive Cost</p>
-               <p className="text-xl font-bold text-slate-100">₹{(machines.reduce((s,m)=>s+m.costImpact.preventiveCost, 0)/100000).toFixed(2)}L</p>
-             </div>
-             <div className="w-px bg-slate-800 h-10 my-auto" />
-             <div>
-               <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Avoided Downtime</p>
-               <p className="text-xl font-bold text-emerald-400">₹{(totalPotentialSavings / 100000).toFixed(2)}L</p>
-             </div>
-           </div>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="glass-card p-6 flex flex-col justify-between min-h-[140px]">
+          <span className="stat-label">Potential Savings</span>
+          <div className="mt-2">
+            <span className="text-3xl font-bold text-emerald-400">₹{(totalPotentialSavings / 100000).toFixed(2)}L</span>
+            <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Capital Recovery Opportunity</p>
+          </div>
+        </div>
+        
+        <div className="glass-card p-6 flex flex-col justify-between min-h-[140px]">
+          <span className="stat-label">Exposure Risk</span>
+          <div className="mt-2">
+            <span className="text-3xl font-bold text-rose-500">₹{(totalBreakdownRisk / 100000).toFixed(2)}L</span>
+            <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Unmitigated Failure Cost</p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-           <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-3xl backdrop-blur-sm">
-             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Active Asset Count</p>
-             <p className="text-4xl font-black text-white">{machines.length}</p>
-           </div>
-           <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-3xl backdrop-blur-sm">
-             <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-2">Exposure Risk</p>
-             <p className="text-4xl font-black text-rose-500">₹{(totalBreakdownRisk / 100000).toFixed(2)}L</p>
-           </div>
-           <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-3xl backdrop-blur-sm">
-             <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-2">Urgent Repairs</p>
-             <p className="text-4xl font-black text-amber-500">{machines.filter(m => m.status === 'warning').length}</p>
-           </div>
-           <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-3xl backdrop-blur-sm">
-             <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-2">Fleet Health Index</p>
-             <p className="text-4xl font-black text-emerald-500">{(100 - (machines.reduce((a,b)=>a+b.failureProbability, 0)/machines.length)).toFixed(0)}%</p>
-           </div>
+        <div className="glass-card p-6 flex flex-col justify-between min-h-[140px]">
+          <span className="stat-label">Fleet Health Index</span>
+          <div className="mt-2">
+            <div className="flex items-end gap-2">
+              <span className="text-3xl font-bold text-white">{(100 - (machines.reduce((a,b)=>a+b.failureProbability, 0)/machines.length)).toFixed(0)}%</span>
+              <TrendingUp className="w-5 h-5 text-emerald-500 mb-1" />
+            </div>
+            <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Aggregate Reliability Score</p>
+          </div>
+        </div>
+
+        <div className="glass-card p-6 flex flex-col justify-between min-h-[140px]">
+          <span className="stat-label">Maintenance Status</span>
+          <div className="mt-2 flex items-center gap-4">
+            <div>
+              <span className="text-2xl font-bold text-amber-500">{machines.filter(m => m.status === 'warning').length}</span>
+              <p className="text-[8px] text-slate-500 uppercase">Warning</p>
+            </div>
+            <div className="w-px h-8 bg-slate-800" />
+            <div>
+              <span className="text-2xl font-bold text-rose-500">{machines.filter(m => m.status === 'critical').length}</span>
+              <p className="text-[8px] text-slate-500 uppercase">Critical</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 items-center bg-slate-900/40 p-4 rounded-2xl border border-slate-800">
-        <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+      <div className="flex flex-col md:flex-row gap-4 items-center">
+        <div className="relative flex-1 w-full">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4" />
           <input 
             type="text" 
-            placeholder="Search asset ID or type..." 
+            placeholder="Search by asset name or type..." 
             value={search} 
             onChange={e => setSearch(e.target.value)} 
-            className="w-full pl-12 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:border-indigo-500 outline-none transition-all text-sm" 
+            className="w-full pl-11 pr-4 py-3 bg-slate-900/50 border border-slate-800 rounded-xl text-white focus:border-indigo-500/50 outline-none transition-all text-sm placeholder:text-slate-600" 
           />
         </div>
-        <div className="flex gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+        <div className="flex gap-1 bg-slate-900/50 p-1 rounded-xl border border-slate-800 w-full md:w-auto overflow-x-auto">
           {(['all', 'healthy', 'warning', 'critical'] as const).map(f => (
             <button 
               key={f} 
               onClick={() => setFilter(f)} 
-              className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${filter === f ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+              className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap ${filter === f ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-slate-300'}`}
             >
               {f}
             </button>
@@ -292,7 +293,7 @@ const Dashboard = ({ machines, onGenerateReport }: { machines: Machine[], onGene
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
         {filtered.map(m => (
           <MachineCard key={m.id} machine={m} onClick={() => navigate(`/machine/${m.id}`)} />
         ))}
@@ -342,140 +343,164 @@ const MachineDetails = ({ machines, onAddLog }: { machines: Machine[], onAddLog:
   };
 
   return (
-    <div className="p-8 space-y-8 animate-in slide-in-from-bottom-4 duration-500 max-w-7xl mx-auto pb-32">
-      <Link to="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-white group transition-colors">
-        <ArrowLeft className="w-4 h-4" />
-        <span className="text-xs font-bold uppercase tracking-widest">Back to fleet view</span>
-      </Link>
+    <div className="p-6 lg:p-10 space-y-8 animate-in slide-in-from-bottom-4 duration-500 max-w-[1600px] mx-auto pb-32">
+      <div className="flex items-center justify-between">
+        <Link to="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-white group transition-colors">
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-xs font-bold uppercase tracking-widest">Back to Fleet</span>
+        </Link>
+        <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${
+          machine.status === 'critical' ? 'bg-rose-500/10 text-rose-500' :
+          machine.status === 'warning' ? 'bg-amber-500/10 text-amber-500' :
+          'bg-emerald-500/10 text-emerald-500'
+        }`}>
+          {machine.status} Status
+        </div>
+      </div>
       
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col xl:flex-row gap-8">
         <div className="flex-1 space-y-8">
-          <div className="flex flex-col md:flex-row md:items-center gap-6">
+          <header className="flex flex-col md:flex-row md:items-center gap-6">
              <div className="flex items-center gap-4">
-               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border shadow-lg ${
-                 machine.status === 'critical' ? 'bg-rose-500/20 border-rose-500/40 text-rose-500' :
-                 machine.status === 'warning' ? 'bg-amber-500/20 border-amber-500/40 text-amber-500' :
-                 'bg-emerald-500/20 border-emerald-500/40 text-emerald-500'
+               <div className={`w-16 h-16 rounded-2xl flex items-center justify-center border shadow-lg ${
+                 machine.status === 'critical' ? 'bg-rose-500/10 border-rose-500/20 text-rose-500' :
+                 machine.status === 'warning' ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' :
+                 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'
                }`}>
                  <Wrench className="w-8 h-8" />
                </div>
                <div>
-                 <h2 className="text-4xl font-black text-white italic tracking-tighter uppercase">{machine.name}</h2>
-                 <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{machine.type} • {machine.location}</p>
+                 <h2 className="text-4xl font-bold text-white tracking-tight">{machine.name}</h2>
+                 <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mt-1">{machine.type} • {machine.location}</p>
                </div>
              </div>
-          </div>
+          </header>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
              {[
                {l: 'Operating Temp', v: machine.sensorData.temperature.toFixed(1)+'°C'},
                {l: 'Vibration Index', v: machine.sensorData.vibration.toFixed(2)+' mm/s'},
                {l: 'RUL Prediction', v: machine.remainingUsefulLife+' Hours'},
-               {l: 'Probable Failure', v: machine.failureProbability+'%'}
+               {l: 'Failure Prob.', v: machine.failureProbability+'%'}
              ].map(s => (
-               <div key={s.l} className="bg-slate-900/60 border border-slate-800/50 p-6 rounded-3xl backdrop-blur-sm">
-                 <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1 tracking-widest">{s.l}</span>
-                 <span className={`text-2xl font-black tracking-tight text-white`}>{s.v}</span>
+               <div key={s.l} className="glass-card p-6">
+                 <span className="stat-label block mb-1">{s.l}</span>
+                 <span className="text-2xl font-bold text-white tracking-tight">{s.v}</span>
                </div>
              ))}
           </div>
 
-          {/* New Financial Impact Analysis Bar */}
-          <div className="bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-[2.5rem] p-8 flex flex-col md:flex-row gap-8 items-center justify-between">
+          <div className="glass-card p-8 flex flex-col md:flex-row gap-8 items-center justify-between">
             <div className="flex items-center gap-5">
-               <div className="w-16 h-16 bg-emerald-500/10 rounded-[1.5rem] flex items-center justify-center border border-emerald-500/20">
-                 <IndianRupee className="w-8 h-8 text-emerald-400" />
+               <div className="w-14 h-14 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
+                 <IndianRupee className="w-6 h-6 text-emerald-400" />
                </div>
                <div>
-                 <h4 className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-1">Financial Risk Assessment</h4>
-                 <p className="text-2xl font-black text-white italic tracking-tighter">₹{(machine.costImpact.potentialSavings / 1000).toFixed(1)}k Realizable Savings</p>
+                 <h4 className="stat-label mb-1">Financial Risk Assessment</h4>
+                 <p className="text-2xl font-bold text-white tracking-tight">₹{(machine.costImpact.potentialSavings / 1000).toFixed(1)}k Realizable Savings</p>
                </div>
             </div>
-            <div className="flex gap-10 w-full md:w-auto">
-               <div className="flex flex-col text-center md:text-right">
-                 <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Failure Loss</span>
-                 <span className="text-lg font-bold text-rose-500">₹{(machine.costImpact.breakdownCost / 1000).toFixed(1)}k</span>
+            <div className="flex gap-10">
+               <div>
+                 <span className="stat-label">Failure Loss</span>
+                 <p className="text-lg font-bold text-rose-500 mt-1">₹{(machine.costImpact.breakdownCost / 1000).toFixed(1)}k</p>
                </div>
-               <div className="flex flex-col text-center md:text-right">
-                 <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Preventive CapEx</span>
-                 <span className="text-lg font-bold text-slate-300">₹{(machine.costImpact.preventiveCost / 1000).toFixed(1)}k</span>
+               <div>
+                 <span className="stat-label">Preventive Cost</span>
+                 <p className="text-lg font-bold text-slate-300 mt-1">₹{(machine.costImpact.preventiveCost / 1000).toFixed(1)}k</p>
                </div>
             </div>
           </div>
 
           <SensorCharts history={machine.history} />
 
-          <div className="bg-slate-900/40 border border-slate-800 rounded-[2.5rem] p-8">
-            <h3 className="text-xl font-bold text-white mb-8 flex items-center gap-3 italic uppercase tracking-tighter">
-              <ClipboardList className="text-indigo-400 w-6 h-6" /> 
-              Service Logbook
+          <div className="glass-card p-8">
+            <h3 className="text-lg font-bold text-white mb-8 flex items-center gap-3">
+              <ClipboardList className="text-indigo-400 w-5 h-5" /> 
+              Maintenance Log
             </h3>
             <div className="space-y-4 mb-10 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                {machine.logs.map(log => (
-                 <div key={log.id} className="p-5 bg-slate-950/40 border border-slate-800 rounded-2xl animate-in slide-in-from-top-2">
+                 <div key={log.id} className="p-5 bg-slate-950/40 border border-slate-800/50 rounded-xl">
                     <div className="flex justify-between items-start mb-2">
-                       <p className="font-black text-indigo-400 uppercase text-xs tracking-wider">{log.action}</p>
-                       <span className="text-[10px] font-mono text-slate-500">{new Date(log.timestamp).toLocaleString()}</span>
+                       <p className="font-bold text-indigo-400 uppercase text-[10px] tracking-wider">{log.action}</p>
+                       <span className="text-[10px] font-mono text-slate-600">{new Date(log.timestamp).toLocaleString()}</span>
                     </div>
-                    <p className="text-sm text-slate-300 leading-relaxed mb-3">{log.notes}</p>
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Operator: {log.operator}</p>
+                    <p className="text-sm text-slate-400 leading-relaxed mb-3">{log.notes}</p>
+                    <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">Operator: {log.operator}</p>
                  </div>
                ))}
             </div>
             
-            <form onSubmit={submitLog} className="bg-slate-950/40 p-8 rounded-3xl border border-slate-800 space-y-6">
-              <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">Add Maintenance Entry</h4>
-              <input 
-                value={logAction} 
-                onChange={e => setLogAction(e.target.value)} 
-                type="text" 
-                placeholder="Action taken..." 
-                className="w-full p-4 bg-slate-900 border border-slate-800 rounded-2xl text-white text-sm outline-none" 
-              />
+            <form onSubmit={submitLog} className="bg-slate-950/40 p-6 rounded-2xl border border-slate-800/50 space-y-4">
+              <h4 className="stat-label">New Entry</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input 
+                  value={logAction} 
+                  onChange={e => setLogAction(e.target.value)} 
+                  type="text" 
+                  placeholder="Action taken..." 
+                  className="w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-white text-sm outline-none focus:border-indigo-500/50" 
+                />
+                <button className="px-6 py-3 bg-slate-800 hover:bg-indigo-600 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all">
+                  <PlusCircle className="w-4 h-4" /> Save Record
+                </button>
+              </div>
               <textarea 
                 value={logNotes} 
                 onChange={e => setLogNotes(e.target.value)} 
-                placeholder="Observations..." 
-                className="w-full p-4 bg-slate-900 border border-slate-800 rounded-2xl text-white text-sm h-32 outline-none" 
+                placeholder="Detailed observations..." 
+                className="w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-white text-sm h-24 outline-none focus:border-indigo-500/50" 
               />
-              <button className="px-8 py-4 bg-slate-800 hover:bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-3 transition-all">
-                <PlusCircle className="w-4 h-4" /> Save Record
-              </button>
             </form>
           </div>
         </div>
 
-        <div className="w-full lg:w-96 shrink-0 space-y-6">
-           <div className="bg-indigo-600 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group">
-             <div className="relative z-10 space-y-8 text-white">
+        <div className="w-full xl:w-96 shrink-0 space-y-6">
+           <div className="bg-indigo-600 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+             <div className="relative z-10 space-y-6 text-white">
                 <div className="flex items-center gap-3">
                   <BrainCircuit className="w-6 h-6" />
-                  <h3 className="text-xl font-bold italic tracking-tighter">AI DIAGNOSTIC</h3>
+                  <h3 className="text-lg font-bold tracking-tight">AI Diagnostic</h3>
                 </div>
 
                 {!recommendation && !isAnalyzing ? (
-                  <button onClick={handleAnalyze} className="w-full bg-white text-indigo-600 font-black py-4 rounded-2xl uppercase text-xs">Compute Protocol</button>
+                  <button onClick={handleAnalyze} className="w-full bg-white text-indigo-600 font-bold py-3 rounded-xl uppercase text-[10px] tracking-widest shadow-lg">Run Analysis</button>
                 ) : isAnalyzing ? (
-                  <Loader2 className="w-10 h-10 animate-spin mx-auto" />
+                  <div className="flex flex-col items-center gap-3 py-4">
+                    <Loader2 className="w-8 h-8 animate-spin" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">Processing Sensor Data...</span>
+                  </div>
                 ) : (
                   <div className="space-y-4 text-sm">
-                    <p className="font-bold">Root Cause: {recommendation?.rootCause}</p>
-                    <ul className="list-disc pl-4 space-y-2">
-                      {recommendation?.steps.map((s,i) => <li key={i}>{s}</li>)}
-                    </ul>
+                    <div className="bg-white/10 p-4 rounded-xl">
+                      <p className="text-[10px] font-bold uppercase tracking-widest opacity-70 mb-1">Root Cause</p>
+                      <p className="font-medium">{recommendation?.rootCause}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">Recommended Steps</p>
+                      <ul className="space-y-2">
+                        {recommendation?.steps.map((s,i) => (
+                          <li key={i} className="flex gap-2 items-start">
+                            <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] shrink-0 mt-0.5">{i+1}</span>
+                            <span className="text-xs opacity-90">{s}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 )}
              </div>
            </div>
 
-           <div className="bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-[2.5rem] p-8 shadow-2xl border-indigo-500/10">
+           <div className="glass-card p-8">
               <div className="flex items-center gap-3 mb-6">
-                <Calendar className="w-6 h-6 text-indigo-400" />
-                <h3 className="text-xl font-bold text-white italic tracking-tighter uppercase">Scheduling Advisor</h3>
+                <Calendar className="w-5 h-5 text-indigo-400" />
+                <h3 className="text-lg font-bold text-white tracking-tight">Advisor</h3>
               </div>
-              <div className="space-y-5">
-                <div className="bg-slate-950/50 p-5 rounded-3xl border border-slate-800">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2">Recommended Window</span>
+              <div className="space-y-4">
+                <div className="bg-slate-950/50 p-5 rounded-2xl border border-slate-800/50">
+                  <span className="stat-label block mb-2">Schedule Window</span>
                   <div className="flex items-center gap-3 text-white">
                     <Clock className="w-4 h-4 text-indigo-400" />
                     <span className="text-sm font-bold">
@@ -483,14 +508,14 @@ const MachineDetails = ({ machines, onAddLog }: { machines: Machine[], onAddLog:
                     </span>
                   </div>
                 </div>
-                <div className="bg-slate-950/50 p-5 rounded-3xl border border-slate-800">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2">Priority Level</span>
+                <div className="bg-slate-950/50 p-5 rounded-2xl border border-slate-800/50">
+                  <span className="stat-label block mb-2">Priority</span>
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${
+                    <div className={`w-2.5 h-2.5 rounded-full ${
                       machine.failureProbability > 75 ? 'bg-rose-500 animate-pulse' : 
                       machine.failureProbability > 30 ? 'bg-amber-500' : 'bg-emerald-500'
                     }`} />
-                    <span className={`text-sm font-black uppercase tracking-widest ${
+                    <span className={`text-xs font-bold uppercase tracking-widest ${
                       machine.failureProbability > 75 ? 'text-rose-500' : 
                       machine.failureProbability > 30 ? 'text-amber-500' : 'text-emerald-500'
                     }`}>
@@ -501,24 +526,30 @@ const MachineDetails = ({ machines, onAddLog }: { machines: Machine[], onAddLog:
               </div>
            </div>
 
-           <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] h-[350px] flex flex-col overflow-hidden">
-              <div className="p-6 border-b border-slate-800 flex items-center gap-3">
+           <div className="glass-card h-[400px] flex flex-col overflow-hidden">
+              <div className="p-5 border-b border-slate-800/50 flex items-center gap-3">
                  <MessageSquare className="w-4 h-4 text-indigo-400" />
-                 <h4 className="text-xs font-black text-white uppercase italic tracking-widest">Asset Support</h4>
+                 <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">Asset Support</h4>
               </div>
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar">
                  {chatHistory.map((h, i) => (
                    <div key={i} className={`flex ${h.role === 'u' ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[85%] p-4 rounded-3xl text-xs ${h.role === 'u' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-200'}`}>
+                      <div className={`max-w-[85%] p-3 rounded-xl text-xs ${h.role === 'u' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-300'}`}>
                         {h.text}
                       </div>
                    </div>
                  ))}
-                 {isTyping && <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />}
+                 {isTyping && (
+                   <div className="flex justify-start">
+                     <div className="bg-slate-800 p-3 rounded-xl">
+                       <Loader2 className="w-3 h-3 text-indigo-400 animate-spin" />
+                     </div>
+                   </div>
+                 )}
               </div>
-              <form onSubmit={handleChat} className="p-4 bg-slate-950 flex gap-2">
-                 <input value={chatMsg} onChange={e => setChatMsg(e.target.value)} type="text" placeholder="Inquire state..." className="flex-1 bg-slate-900 p-4 rounded-xl text-xs text-white outline-none" />
-                 <button className="w-12 h-12 bg-indigo-600 text-white rounded-xl flex items-center justify-center shadow-lg"><Send className="w-4 h-4" /></button>
+              <form onSubmit={handleChat} className="p-4 bg-slate-950/50 flex gap-2 border-t border-slate-800/50">
+                 <input value={chatMsg} onChange={e => setChatMsg(e.target.value)} type="text" placeholder="Ask about this asset..." className="flex-1 bg-slate-900 p-3 rounded-xl text-xs text-white outline-none focus:border-indigo-500/50 transition-all" />
+                 <button className="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center shadow-lg hover:bg-indigo-500 transition-all"><Send className="w-4 h-4" /></button>
               </form>
            </div>
         </div>
@@ -530,31 +561,48 @@ const MachineDetails = ({ machines, onAddLog }: { machines: Machine[], onAddLog:
 // --- Main App ---
 
 const Sidebar = ({ unreadCount, onToggleAlerts }: { unreadCount: number, onToggleAlerts: () => void }) => {
-  const { logout, user, role } = useAuth();
+  const { logout, user } = useAuth();
   return (
-    <div className="w-20 lg:w-72 bg-slate-950 border-r border-slate-800 flex flex-col h-screen shrink-0 z-40">
-      <div className="p-8 flex items-center gap-4">
-        <Zap className="text-indigo-600 w-8 h-8" />
-        <h1 className="hidden lg:block font-black text-lg text-white uppercase italic tracking-tighter leading-none">
-          Maintenance <br/>
-          <span className="text-indigo-400 text-xs tracking-widest not-italic font-bold">Recommendation System</span>
+    <div className="w-20 lg:w-64 bg-slate-950 border-r border-slate-800/60 flex flex-col h-screen shrink-0 z-40">
+      <div className="p-6 lg:p-8 flex items-center gap-3">
+        <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
+          <Zap className="text-white w-6 h-6" />
+        </div>
+        <h1 className="hidden lg:block font-bold text-sm text-white tracking-tight leading-tight">
+          Maintenance<br/>
+          <span className="text-indigo-400 text-[10px] font-medium tracking-wider uppercase">Advisor Pro</span>
         </h1>
       </div>
-      <nav className="flex-1 px-4 py-8 space-y-3">
-        <Link to="/" className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-slate-900 group">
-          <LayoutDashboard className="w-6 h-6 text-slate-500 group-hover:text-indigo-400" />
-          <span className="hidden lg:block text-slate-400 group-hover:text-white font-black uppercase tracking-widest text-[10px]">Command Center</span>
+      
+      <nav className="flex-1 px-4 py-6 space-y-1">
+        <Link to="/" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 transition-all group">
+          <LayoutDashboard className="w-5 h-5 text-slate-500 group-hover:text-indigo-400 transition-colors" />
+          <span className="hidden lg:block text-slate-400 group-hover:text-white font-medium text-sm">Dashboard</span>
         </Link>
-        <button onClick={onToggleAlerts} className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-slate-900 group relative">
-          <Bell className="w-6 h-6 text-slate-500 group-hover:text-indigo-400" />
-          <span className="hidden lg:block text-slate-400 group-hover:text-white font-black uppercase tracking-widest text-[10px]">Incident Log</span>
-          {unreadCount > 0 && <span className="absolute top-4 left-9 w-5 h-5 bg-rose-500 rounded-full flex items-center justify-center text-[8px] font-black text-white">{unreadCount}</span>}
+        <button onClick={onToggleAlerts} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-900/50 transition-all group relative">
+          <Bell className="w-5 h-5 text-slate-500 group-hover:text-indigo-400 transition-colors" />
+          <span className="hidden lg:block text-slate-400 group-hover:text-white font-medium text-sm">Alerts</span>
+          {unreadCount > 0 && (
+            <span className="absolute top-3 left-7 lg:left-auto lg:right-4 w-5 h-5 bg-rose-500 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-rose-500/20">
+              {unreadCount}
+            </span>
+          )}
         </button>
       </nav>
-      <div className="p-6 border-t border-slate-900 space-y-6">
-        <button onClick={logout} className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-rose-500/10 text-slate-500 hover:text-rose-400 transition-all group">
-          <LogOut className="w-6 h-6" />
-          <span className="hidden lg:block font-black uppercase tracking-widest text-[10px]">Terminal Logout</span>
+
+      <div className="p-4 border-t border-slate-900">
+        <div className="hidden lg:flex items-center gap-3 px-4 py-4 mb-2">
+          <div className="w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center">
+            <UserIcon className="w-4 h-4 text-slate-400" />
+          </div>
+          <div className="overflow-hidden">
+            <p className="text-xs font-bold text-white truncate">{user}</p>
+            <p className="text-[10px] text-slate-500 uppercase tracking-wider">Authorized</p>
+          </div>
+        </div>
+        <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-rose-500/10 text-slate-500 hover:text-rose-400 transition-all group">
+          <LogOut className="w-5 h-5" />
+          <span className="hidden lg:block font-medium text-sm">Logout</span>
         </button>
       </div>
     </div>
